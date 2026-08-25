@@ -1,5 +1,11 @@
-package.json
-server.js
-vercel.json
-public/
-    index.html
+{
+  "name": "mygame-universe",
+  "version": "4.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
