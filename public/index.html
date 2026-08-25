@@ -1,259 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MyGame Universe</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>MyGame Universe</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #080b16;
-      color: white;
-    }
-
-    header {
-      padding: 20px;
-      background: #11162b;
-      border-bottom: 1px solid #303758;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #6c63ff;
-    }
-
-    nav button {
-      margin-left: 8px;
-      padding: 10px 16px;
-      border: 0;
-      border-radius: 8px;
-      background: #202746;
-      color: white;
-      cursor: pointer;
-    }
-
-    nav button:hover {
-      background: #303862;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 70px 20px;
-      background:
-        radial-gradient(circle at top, #2935a0, #080b16 60%);
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 8vw, 72px);
-      margin: 0 0 15px;
-    }
-
-    .hero p {
-      font-size: 20px;
-      color: #cbd0e8;
-    }
-
-    .primary {
-      margin-top: 25px;
-      padding: 15px 30px;
-      border: 0;
-      border-radius: 10px;
-      background: #5b5cff;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .primary:hover {
-      background: #7475ff;
-    }
-
-    .section {
-      padding: 35px 20px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .games {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
-
-    .game {
-      background: #12182d;
-      border: 1px solid #2c3457;
-      border-radius: 14px;
-      padding: 20px;
-    }
-
-    .game h3 {
-      margin-top: 0;
-    }
-
-    .game button {
-      padding: 10px 15px;
-      border: 0;
-      border-radius: 8px;
-      background: #5b5cff;
-      color: white;
-      cursor: pointer;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      color: #8990aa;
-      border-top: 1px solid #252b47;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#080b16;
+  color:white
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#11162b;
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #303758
+}
+.logo{font-size:21px;font-weight:bold}
+.coins{
+  background:#27304b;
+  padding:9px 14px;
+  border-radius:20px;
+  color:#ffd43b
+}
+nav{
+  display:flex;
+  gap:7px;
+  padding:10px;
+  background:#151c32;
+  overflow:auto
+}
+nav button,.btn{
+  border:0;
+  border-radius:9px;
+  padding:11px 15px;
+  color:white;
+  background:#293452;
+  cursor:pointer;
+  font-weight:bold
+}
+nav button.active,.primary{
+  background:#635bff
+}
+.page{
+  display:none;
+  max-width:1100px;
+  margin:auto;
+  padding:25px 16px
+}
+.page.active{display:block}
+.hero{
+  text-align:center;
+  padding:65px 20px;
+  background:radial-gradient(circle at top,#2935a0,#080b16 65%)
+}
+.hero h1{
+  font-size:clamp(38px,8vw,70px);
+  margin:0 0 12px
+}
+.hero p{color:#cbd0e8;font-size:19px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:16px
+}
+.card{
+  background:#141b30;
+  border:1px solid #303958;
+  border-radius:15px;
+  padding:18px
+}
+.icon{
+  height:130px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+  background:#202943;
+  border-radius:12px;
+  margin-bottom:12px
+}
+input,textarea{
+  width:100%;
+  margin:7px 0;
+  padding:12px;
+  border-radius:9px;
+  border:1px solid #3b4668;
+  background:#0c1120;
+  color:white
+}
+textarea{min-height:100px}
+.small{color:#9ba5bf}
+.buy{width:100%;margin-top:10px}
+.owned{background:#16a34a!important}
+.notice{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#16a34a;
+  padding:13px 20px;
+  border-radius:10px;
+  display:none;
+  z-index:50
+}
+.game button{margin-top:10px}
+footer{text-align:center;color:#7f8aa5;padding:30px}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">🎮 MyGame Universe</div>
+<header>
+  <div class="logo">🌌 MyGame Universe</div>
+  <div class="coins">🪙 <span id="coins">1000</span></div>
+</header>
 
-    <nav>
-      <button onclick="showSection('games')">Play</button>
-      <button onclick="showSection('create')">Create</button>
-      <button onclick="showSection('avatar')">Avatar</button>
-      <button onclick="showSection('shop')">Shop</button>
-    </nav>
-  </header>
+<nav>
+  <button class="active" onclick="page('home',this)">🏠 Home</button>
+  <button onclick="page('games',this)">🎮 Games</button>
+  <button onclick="page('shop',this)">🛍️ Shop</button>
+  <button onclick="page('avatar',this)">🧑 Avatar</button>
+  <button onclick="page('inventory',this)">🎒 Inventory</button>
+  <button onclick="page('create',this)">🛠️ Create</button>
+</nav>
 
-  <section class="hero">
+<section id="home" class="page active">
+  <div class="hero">
     <h1>MyGame Universe</h1>
-
-    <p>
-      Play, create, and explore countless games.
-    </p>
-
-    <button
-      class="primary"
-      onclick="showSection('games')"
-    >
-      Enter Universe
+    <p>Play. Create. Explore. Share.</p>
+    <button class="btn primary" onclick="page('games')">
+      🎮 Play Now
     </button>
-  </section>
+  </div>
+</section>
 
-  <section class="section" id="games">
-    <h2>🎮 Game Browser</h2>
+<section id="games" class="page">
+  <h1>🎮 Games</h1>
+  <p class="small">Choose a game to play.</p>
 
-    <div class="games">
+  <div class="grid">
 
-      <div class="game">
-        <h3>🏙️ City Life</h3>
-        <p>Explore a giant virtual city.</p>
-        <button onclick="playGame('City Life')">
-          Play
-        </button>
-      </div>
-
-      <div class="game">
-        <h3>🏎️ Racing</h3>
-        <p>Race against other players.</p>
-        <button onclick="playGame('Racing')">
-          Play
-        </button>
-      </div>
-
-      <div class="game">
-        <h3>⚔️ Battle Arena</h3>
-        <p>Enter the arena and compete.</p>
-        <button onclick="playGame('Battle Arena')">
-          Play
-        </button>
-      </div>
-
-      <div class="game">
-        <h3>🌎 Adventure</h3>
-        <p>Discover a mysterious world.</p>
-        <button onclick="playGame('Adventure')">
-          Play
-        </button>
-      </div>
-
+    <div class="card game">
+      <div class="icon">🏎️</div>
+      <h2>Speed Racer</h2>
+      <p class="small">Race to the finish line.</p>
+      <button class="btn primary" onclick="raceGame()">Play</button>
     </div>
-  </section>
 
-  <section class="section" id="create">
-    <h2>🛠️ Create</h2>
-    <p>
-      Build your own games and experiences.
-    </p>
+    <div class="card game">
+      <div class="icon">🧱</div>
+      <h2>Block Builder</h2>
+      <p class="small">Build your own world.</p>
+      <button class="btn primary" onclick="blockGame()">Play</button>
+    </div>
 
-    <button
-      class="primary"
-      onclick="alert('Create mode coming soon!')"
-    >
-      Start Creating
+    <div class="card game">
+      <div class="icon">🗺️</div>
+      <h2>Adventure World</h2>
+      <p class="small">Explore the universe.</p>
+      <button class="btn primary" onclick="adventureGame()">Play</button>
+    </div>
+
+  </div>
+</section>
+
+<section id="shop" class="page">
+  <h1>🛍️ Shop</h1>
+  <p class="small">Spend your in-game coins on items.</p>
+  <div id="shopGrid" class="grid"></div>
+</section>
+
+<section id="avatar" class="page">
+  <h1>🧑 Avatar</h1>
+
+  <div class="card">
+    <div id="avatarDisplay" style="font-size:100px;text-align:center">
+      😀
+    </div>
+
+    <h2>Choose your avatar</h2>
+
+    <button class="btn" onclick="setAvatar('😀')">😀</button>
+    <button class="btn" onclick="setAvatar('😎')">😎</button>
+    <button class="btn" onclick="setAvatar('🤖')">🤖</button>
+    <button class="btn" onclick="setAvatar('👑')">👑</button>
+    <button class="btn" onclick="setAvatar('🐉')">🐉</button>
+  </div>
+</section>
+
+<section id="inventory" class="page">
+  <h1>🎒 Inventory</h1>
+  <div id="inventoryGrid" class="grid"></div>
+</section>
+
+<section id="create" class="page">
+  <h1>🛠️ Create</h1>
+
+  <div class="card">
+    <h2>Create a game</h2>
+
+    <input id="gameName" placeholder="Game name">
+
+    <textarea id="gameDescription"
+      placeholder="Game description"></textarea>
+
+    <button class="btn primary" onclick="createGame()">
+      Publish Game
     </button>
-  </section>
 
-  <section class="section" id="avatar">
-    <h2>🧑 Avatar</h2>
-    <p>
-      Customize your MyGame Universe avatar.
-    </p>
+    <div id="createdGames"></div>
+  </div>
+</section>
 
-    <button
-      class="primary"
-      onclick="alert('Avatar editor coming soon!')"
-    >
-      Customize Avatar
-    </button>
-  </section>
+<div id="notice" class="notice"></div>
 
-  <section class="section" id="shop">
-    <h2>🛒 Shop</h2>
-    <p>
-      Browse items for your avatar.
-    </p>
+<footer>
+  MyGame Universe © 2026
+</footer>
 
-    <button
-      class="primary"
-      onclick="alert('Shop coming soon!')"
-    >
-      Open Shop
-    </button>
-  </section>
+<script>
+const items=[
+  {id:"shirt",name:"Blue Shirt",icon:"👕",price:100},
+  {id:"hat",name:"Red Hat",icon:"🧢",price:150},
+  {id:"glasses",name:"Sunglasses",icon:"😎",price:250},
+  {id:"crown",name:"Golden Crown",icon:"👑",price:500},
+  {id:"robot",name:"Robot Suit",icon:"🤖",price:750},
+  {id:"dragon",name:"Dragon Pet",icon:"🐉",price:1000}
+];
 
-  <footer>
-    MyGame Universe © 2026
-  </footer>
+let coins=Number(localStorage.getItem("mgu_coins"));
+if(!Number.isFinite(coins)) coins=1000;
 
-  <script>
-    function playGame(name) {
-      alert("Launching " + name + "!");
+let inventory=JSON.parse(
+  localStorage.getItem("mgu_inventory")||"[]"
+);
+
+let avatar=localStorage.getItem("mgu_avatar")||"😀";
+
+let createdGames=JSON.parse(
+  localStorage.getItem("mgu_games")||"[]"
+);
+
+function save(){
+  localStorage.setItem("mgu_coins",coins);
+  localStorage.setItem(
+    "mgu_inventory",
+    JSON.stringify(inventory)
+  );
+  localStorage.setItem("mgu_avatar",avatar);
+  localStorage.setItem(
+    "mgu_games",
+    JSON.stringify(createdGames)
+  );
+}
+
+function update(){
+  document.getElementById("coins").textContent=
+    coins.toLocaleString();
+
+  document.getElementById("avatarDisplay").textContent=
+    avatar;
+}
+
+function page(id,button){
+  document.querySelectorAll(".page")
+    .forEach(x=>x.classList.remove("active"));
+
+  document.getElementById(id)
+    .classList.add("active");
+
+  document.querySelectorAll("nav button")
+    .forEach(x=>x.classList.remove("active"));
+
+  if(button) button.classList.add("active");
+
+  if(id==="shop") drawShop();
+  if(id==="inventory") drawInventory();
+  if(id==="create") drawCreatedGames();
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function message(text){
+  const n=document.getElementById("notice");
+  n.textContent=text;
+  n.style.display="block";
+
+  setTimeout(()=>{
+    n.style.display="none";
+  },2200);
+}
+
+function drawShop(){
+  const grid=document.getElementById("shopGrid");
+  grid.innerHTML="";
+
+  items.forEach(item=>{
+    const owned=inventory.includes(item.id);
+
+    grid.innerHTML+=`
+      <div class="card">
+        <div class="icon">${item.icon}</div>
+        <h2>${item.name}</h2>
+        <p class="small">🪙 ${item.price}</p>
+
+        <button
+          class="btn buy ${owned?"owned":""}"
+          ${owned?"disabled":""}
+          onclick="buy('${item.id}')">
+
+          ${owned?"✓ Owned":"Buy"}
+
+        </button>
+      </div>
+    `;
+  });
+}
+
+function buy(id){
+  const item=items.find(x=>x.id===id);
+  if(!item)return;
+
+  if(inventory.includes(id)){
+    message("You already own this item.");
+    return;
+  }
+
+  if(coins<item.price){
+    message("Not enough coins!");
+    return;
+  }
+
+  coins-=item.price;
+  inventory.push(id);
+
+  save();
+  update();
+  drawShop();
+
+  message(item.name+" purchased!");
+}
+
+function drawInventory(){
+  const grid=document.getElementById("inventoryGrid");
+
+  if(inventory.length===0){
+    grid.innerHTML=
+      `<div class="card">
+        Your inventory is empty. Visit the Shop!
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML="";
+
+  inventory.forEach(id=>{
+    const item=items.find(x=>x.id===id);
+    if(!item)return;
+
+    grid.innerHTML+=`
+      <div class="card">
+        <div class="icon">${item.icon}</div>
+        <h2>${item.name}</h2>
+        <p style="color:#22c55e">✓ Owned</p>
+      </div>
+    `;
+  });
+}
+
+function setAvatar(value){
+  avatar=value;
+  save();
+  update();
+  message("Avatar updated!");
+}
+
+function createGame(){
+  const name=
+    document.getElementById("gameName").value.trim();
+
+  const description=
+    document.getElementById("gameDescription")
+      .value.trim();
+
+  if(!name){
+    message("Enter a game name.");
+    return;
+  }
+
+  createdGames.push({
+    name:name,
+    description:description||"My new game"
+  });
+
+  save();
+
+  document.getElementById("gameName").value="";
+  document.getElementById("gameDescription").value="";
+
+  drawCreatedGames();
+
+  message("Game created!");
+}
+
+function drawCreatedGames(){
+  const box=document.getElementById("createdGames");
+
+  if(createdGames.length===0){
+    box.innerHTML=
+      `<p class="small">No games created yet.</p>`;
+    return;
+  }
+
+  box.innerHTML="<h2>Your Games</h2>";
+
+  createdGames.forEach(game=>{
+    box.innerHTML+=`
+      <div class="card">
+        <h3>🎮 ${escapeHTML(game.name)}</h3>
+        <p class="small">
+          ${escapeHTML(game.description)}
+        </p>
+        <button class="btn"
+          onclick="message('Launching ${escapeJS(game.name)}!')">
+          Play
+        </button>
+      </div>
+    `;
+  });
+}
+
+function escapeHTML(value){
+  return value.replace(/[&<>"']/g,char=>{
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[char];
+  });
+}
+
+function escapeJS(value){
+  return value.replace(/'/g,"\\'");
+}
+
+/* Simple playable mini-games */
+
+function raceGame(){
+  page("games");
+  let distance=0;
+
+  const timer=setInterval(()=>{
+    distance+=10;
+
+    if(distance>=100){
+      clearInterval(timer);
+      coins+=100;
+      save();
+      update();
+      message("🏁 You finished the race! +100 coins");
     }
+  },100);
+}
 
-    function showSection(id) {
-      const section = document.getElementById(id);
+function blockGame(){
+  coins+=25;
+  save();
+  update();
+  message("🧱 You built a block! +25 coins");
+}
 
-      if (section) {
-        section.scrollIntoView({
-          behavior: "smooth"
-        });
-      }
-    }
-  </script>
+function adventureGame(){
+  coins+=50;
+  save();
+  update();
+  message("🗺️ Adventure complete! +50 coins");
+}
+
+update();
+drawShop();
+drawInventory();
+drawCreatedGames();
+</script>
 
 </body>
 </html>
